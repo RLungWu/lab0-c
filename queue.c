@@ -47,33 +47,44 @@ void q_free(struct list_head *head)
 /* Insert an element at head of queue */
 bool q_insert_head(struct list_head *head, char *s)
 {
-    if (!head)
-        return false;  // queue is null
+    if (!head) {  // false for queue is null
+        return false;
+    }
 
-    struct list_head *new_list_head =
-        (struct list_head *) malloc(sizeof(struct list_head));
-    if (!new_list_head)
-        return false;  // allocation failed
+    element_t *new_elem = malloc(sizeof(element_t));
+    if (!new_elem) {  // false for malloc failed
+        return false;
+    }
 
-    // element_t new_elem = {s, *new_list_head};
-    list_add(new_list_head, head);
+    new_elem->value = strdup(s);
+    if (!new_elem->value) {  // false for strdup failed
+        free(new_elem);
+        return false;
+    }
+
+    list_add(&new_elem->list, head);
     return true;
 }
 
 /* Insert an element at tail of queue */
 bool q_insert_tail(struct list_head *head, char *s)
 {
-    if (!head)
+    if (!head) {  // false for queue is null
         return false;
+    }
 
-    struct list_head *new_list_head =
-        (struct list_head *) malloc(sizeof(struct list_head));
-    if (!new_list_head)
+    element_t *new_elem = malloc(sizeof(element_t));
+    if (!new_elem) {  // false for malloc failed
         return false;
+    }
 
-    // element_t new_elem = {s, *new_list_head};
-    list_add_tail(new_list_head, head);
+    new_elem->value = strdup(s);
+    if (!new_elem->value) {
+        free(new_elem);
+        return false;
+    }
 
+    list_add_tail(&new_elem->list, head);
     return true;
 }
 
