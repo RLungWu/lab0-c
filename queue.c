@@ -15,21 +15,65 @@
 /* Create an empty queue */
 struct list_head *q_new()
 {
+    struct list_head *head =
+        (struct list_head *) malloc(sizeof(struct list_head));
+    if (head) {
+        INIT_LIST_HEAD(head);
+        return head;
+    }
     return NULL;
 }
 
 /* Free all storage used by queue */
-void q_free(struct list_head *head) {}
+void q_free(struct list_head *head)
+{
+    if (head == NULL) {
+        return;
+    }
+
+    struct list_head *cur, *safe;
+
+    list_for_each_safe (cur, safe, head) {
+        element_t *free_node = list_entry(cur, element_t, list);
+        free(free_node->value);
+        list_del(cur);
+        free(free_node);
+    }
+
+    free(head);
+    return;
+}
 
 /* Insert an element at head of queue */
 bool q_insert_head(struct list_head *head, char *s)
 {
+    if (!head)
+        return false;  // queue is null
+
+    struct list_head *new_list_head =
+        (struct list_head *) malloc(sizeof(struct list_head));
+    if (!new_list_head)
+        return false;  // allocation failed
+
+    // element_t new_elem = {s, *new_list_head};
+    list_add(new_list_head, head);
     return true;
 }
 
 /* Insert an element at tail of queue */
 bool q_insert_tail(struct list_head *head, char *s)
 {
+    if (!head)
+        return false;
+
+    struct list_head *new_list_head =
+        (struct list_head *) malloc(sizeof(struct list_head));
+    if (!new_list_head)
+        return false;
+
+    // element_t new_elem = {s, *new_list_head};
+    list_add_tail(new_list_head, head);
+
     return true;
 }
 
